@@ -8,6 +8,11 @@ document.addEventListener('DOMContentLoaded', function() {
     const loadingSpinner = document.getElementById('loadingSpinner');
     const errorAlert = document.getElementById('errorAlert');
     const copyButton = document.getElementById('copyButton');
+    const previewPane = document.createElement('div'); // Added preview pane
+    previewPane.id = 'previewPane';
+    results.parentNode.insertBefore(previewPane, results); //Added preview pane before results
+
+
 
     function showLoading() {
         loadingSpinner.classList.remove('d-none');
@@ -74,7 +79,56 @@ document.addEventListener('DOMContentLoaded', function() {
                 </div>
             `).join('');
 
+            
+            // Add event listeners for real-time preview
+            const radioButtons = fieldsContainer.querySelectorAll('input[type="radio"]');
+    function updatePreview() {
+        const searchableFields = [];
+        const metadataFields = [];
+        
+        const fields = fieldsContainer.querySelectorAll('input[type="radio"]:checked');
+        fields.forEach(field => {
+            const fieldName = field.name;
+            const fieldType = field.value;
+            
+            if (fieldType === 'searchable') {
+                searchableFields.push(fieldName);
+            } else if (fieldType === 'metadata') {
+                metadataFields.push(fieldName);
+            }
+        });
+
+        const previewData = {
+            data: {
+                schema: {
+                    searchableFields,
+                    metadataFields
+                },
+                name: document.getElementById('tableId').value,
+                items: [
+                    generateSampleItem(searchableFields, metadataFields),
+                ]
+            }
+        };
+
+        const previewOutput = document.getElementById('previewOutput');
+        previewOutput.textContent = JSON.stringify(previewData, null, 2);
+    }
+
+    function generateSampleItem(searchableFields, metadataFields) {
+        const sampleItem = {};
+        [...searchableFields, ...metadataFields].forEach(field => {
+            sampleItem[field] = "Sample Value";
+        });
+        return sampleItem;
+    }
+
+            radioButtons.forEach(radio => {
+                radio.addEventListener('change', updatePreview);
+            });
+            
             fieldSelection.classList.remove('d-none');
+            updatePreview(); // Initial preview
         } catch (error) {
             showError(error.message);
         } finally {
@@ -146,4 +200,13 @@ document.addEventListener('DOMContentLoaded', function() {
                 showError('Failed to copy to clipboard');
             });
     });
+
+    function updatePreview() {
+        // Implement preview update logic here.  This is a placeholder.
+        //  You'll need to fetch data based on the selected radio buttons
+        // and update the content of the previewPane.  For example:
+        const previewData = {}; // Construct preview data
+        previewPane.textContent = JSON.stringify(previewData, null, 2);
+
+    }
 });
