@@ -72,19 +72,18 @@ document.addEventListener('DOMContentLoaded', function() {
                 </div>
             `).join('');
 
-            const radioButtons = fieldsContainer.querySelectorAll('input[type="radio"]');
+            const checkboxes = fieldsContainer.querySelectorAll('input[type="checkbox"]');
             function updatePreview() {
                 const searchableFields = [];
                 const metadataFields = [];
                 
-                const fields = fieldsContainer.querySelectorAll('input[type="radio"]:checked');
+                const fields = fieldsContainer.querySelectorAll('input[type="checkbox"]');
                 fields.forEach(field => {
                     const fieldName = field.name;
-                    const fieldType = field.value;
-                    
-                    if (fieldType === 'searchable') {
+                    if (field.id.endsWith('-searchable') && field.checked) {
                         searchableFields.push(fieldName);
-                    } else if (fieldType === 'metadata') {
+                    }
+                    if (field.id.endsWith('-metadata') && field.checked) {
                         metadataFields.push(fieldName);
                     }
                 });
@@ -114,8 +113,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 return sampleItem;
             }
 
-            radioButtons.forEach(radio => {
-                radio.addEventListener('change', updatePreview);
+            checkboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', updatePreview);
             });
             
             // Show the field selection section and enable the transform button
@@ -136,14 +135,13 @@ document.addEventListener('DOMContentLoaded', function() {
         const searchableFields = [];
         const metadataFields = [];
         
-        const fields = fieldsContainer.querySelectorAll('input[type="radio"]:checked');
+        const fields = fieldsContainer.querySelectorAll('input[type="checkbox"]');
         fields.forEach(field => {
             const fieldName = field.name;
-            const fieldType = field.value;
-            
-            if (fieldType === 'searchable') {
+            if (field.id.endsWith('-searchable') && field.checked) {
                 searchableFields.push(fieldName);
-            } else if (fieldType === 'metadata') {
+            }
+            if (field.id.endsWith('-metadata') && field.checked) {
                 metadataFields.push(fieldName);
             }
         });
