@@ -216,15 +216,13 @@ document.addEventListener('DOMContentLoaded', function() {
                 throw new Error(voiceflowError.error || 'Failed to upload to Voiceflow');
             }
 
-            // Show success message
-            const successAlert = document.createElement('div');
-            successAlert.className = 'alert alert-success mt-3';
-            successAlert.textContent = 'Successfully uploaded to Voiceflow!';
-            results.appendChild(successAlert);
-
-            // Remove success message after 3 seconds
+            // Show success indicator on the button
+            const originalText = uploadToVoiceflowButton.innerHTML;
+            uploadToVoiceflowButton.innerHTML = '<i class="bi bi-cloud-upload"></i> Upload to Voiceflow <i class="bi bi-check-circle-fill text-success ms-2"></i>';
+            
+            // Restore original button text after 3 seconds
             setTimeout(() => {
-                successAlert.remove();
+                uploadToVoiceflowButton.innerHTML = originalText;
             }, 3000);
 
         } catch (error) {
