@@ -118,7 +118,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 radio.addEventListener('change', updatePreview);
             });
             
+            // Show the field selection section and enable the transform button
             fieldSelection.classList.remove('d-none');
+            transformButton.disabled = false;
             updatePreview();
         } catch (error) {
             showError(error.message);
