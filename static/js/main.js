@@ -8,11 +8,9 @@ document.addEventListener('DOMContentLoaded', function() {
     const loadingSpinner = document.getElementById('loadingSpinner');
     const errorAlert = document.getElementById('errorAlert');
     const copyButton = document.getElementById('copyButton');
-    const previewPane = document.createElement('div'); // Added preview pane
+    const previewPane = document.createElement('div');
     previewPane.id = 'previewPane';
-    results.parentNode.insertBefore(previewPane, results); //Added preview pane before results
-
-
+    results.parentNode.insertBefore(previewPane, results);
 
     function showLoading() {
         loadingSpinner.classList.remove('d-none');
@@ -37,7 +35,8 @@ document.addEventListener('DOMContentLoaded', function() {
         showLoading();
 
         const credentials = {
-            apiKey: document.getElementById('apiKey').value,
+            voiceflowApiKey: document.getElementById('voiceflowApiKey').value,
+            airtableApiKey: document.getElementById('airtableApiKey').value,
             baseId: document.getElementById('baseId').value,
             tableId: document.getElementById('tableId').value
         };
@@ -57,7 +56,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 throw new Error(data.error || 'Failed to fetch fields');
             }
 
-            // Create field selection checkboxes
             fieldsContainer.innerHTML = data.fields.map(field => `
                 <div class="mb-2 d-flex align-items-center">
                     <span class="field-name flex-shrink-0 me-3">${field}</span>
@@ -74,56 +72,54 @@ document.addEventListener('DOMContentLoaded', function() {
                 </div>
             `).join('');
 
-            
-            // Add event listeners for real-time preview
             const radioButtons = fieldsContainer.querySelectorAll('input[type="radio"]');
-    function updatePreview() {
-        const searchableFields = [];
-        const metadataFields = [];
-        
-        const fields = fieldsContainer.querySelectorAll('input[type="radio"]:checked');
-        fields.forEach(field => {
-            const fieldName = field.name;
-            const fieldType = field.value;
-            
-            if (fieldType === 'searchable') {
-                searchableFields.push(fieldName);
-            } else if (fieldType === 'metadata') {
-                metadataFields.push(fieldName);
+            function updatePreview() {
+                const searchableFields = [];
+                const metadataFields = [];
+                
+                const fields = fieldsContainer.querySelectorAll('input[type="radio"]:checked');
+                fields.forEach(field => {
+                    const fieldName = field.name;
+                    const fieldType = field.value;
+                    
+                    if (fieldType === 'searchable') {
+                        searchableFields.push(fieldName);
+                    } else if (fieldType === 'metadata') {
+                        metadataFields.push(fieldName);
+                    }
+                });
+
+                const previewData = {
+                    data: {
+                        schema: {
+                            searchableFields,
+                            metadataFields
+                        },
+                        name: document.getElementById('tableId').value,
+                        items: [
+                            generateSampleItem(searchableFields, metadataFields),
+                        ]
+                    }
+                };
+
+                const previewOutput = document.getElementById('previewOutput');
+                previewOutput.textContent = JSON.stringify(previewData, null, 2);
             }
-        });
 
-        const previewData = {
-            data: {
-                schema: {
-                    searchableFields,
-                    metadataFields
-                },
-                name: document.getElementById('tableId').value,
-                items: [
-                    generateSampleItem(searchableFields, metadataFields),
-                ]
+            function generateSampleItem(searchableFields, metadataFields) {
+                const sampleItem = {};
+                [...searchableFields, ...metadataFields].forEach(field => {
+                    sampleItem[field] = "Sample Value";
+                });
+                return sampleItem;
             }
-        };
-
-        const previewOutput = document.getElementById('previewOutput');
-        previewOutput.textContent = JSON.stringify(previewData, null, 2);
-    }
-
-    function generateSampleItem(searchableFields, metadataFields) {
-        const sampleItem = {};
-        [...searchableFields, ...metadataFields].forEach(field => {
-            sampleItem[field] = "Sample Value";
-        });
-        return sampleItem;
-    }
 
             radioButtons.forEach(radio => {
                 radio.addEventListener('change', updatePreview);
             });
             
             fieldSelection.classList.remove('d-none');
-            updatePreview(); // Initial preview
+            updatePreview();
         } catch (error) {
             showError(error.message);
         } finally {
@@ -151,7 +147,8 @@ document.addEventListener('DOMContentLoaded', function() {
         });
 
         const requestData = {
-            apiKey: document.getElementById('apiKey').value,
+            voiceflowApiKey: document.getElementById('voiceflowApiKey').value,
+            airtableApiKey: document.getElementById('airtableApiKey').value,
             baseId: document.getElementById('baseId').value,
             tableId: document.getElementById('tableId').value,
             searchableFields,
@@ -173,8 +170,27 @@ document.addEventListener('DOMContentLoaded', function() {
                 throw new Error(data.error || 'Failed to transform data');
             }
 
+            // Display the transformed data
             jsonOutput.textContent = JSON.stringify(data, null, 2);
             results.classList.remove('d-none');
+
+            // Upload to Voiceflow
+            const voiceflowResponse = await fetch('/upload-to-voiceflow', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    voiceflowApiKey: requestData.voiceflowApiKey,
+                    data: data
+                })
+            });
+
+            if (!voiceflowResponse.ok) {
+                const voiceflowError = await voiceflowResponse.json();
+                throw new Error(voiceflowError.error || 'Failed to upload to Voiceflow');
+            }
+
         } catch (error) {
             showError(error.message);
         } finally {
@@ -195,6 +211,4 @@ document.addEventListener('DOMContentLoaded', function() {
                 showError('Failed to copy to clipboard');
             });
     });
-
-    // Preview functionality is now handled by the updatePreview function above
 });
