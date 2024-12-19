@@ -29,6 +29,15 @@ document.addEventListener('DOMContentLoaded', function() {
         errorAlert.classList.add('d-none');
     }
 
+    // Load saved credentials when page loads
+    window.addEventListener('load', function() {
+        const savedCredentials = JSON.parse(localStorage.getItem('dataTransformerCredentials') || '{}');
+        if (savedCredentials.voiceflowApiKey) document.getElementById('voiceflowApiKey').value = savedCredentials.voiceflowApiKey;
+        if (savedCredentials.airtableApiKey) document.getElementById('airtableApiKey').value = savedCredentials.airtableApiKey;
+        if (savedCredentials.baseId) document.getElementById('baseId').value = savedCredentials.baseId;
+        if (savedCredentials.tableId) document.getElementById('tableId').value = savedCredentials.tableId;
+    });
+
     credentialsForm.addEventListener('submit', async function(e) {
         e.preventDefault();
         hideError();
@@ -40,6 +49,9 @@ document.addEventListener('DOMContentLoaded', function() {
             baseId: document.getElementById('baseId').value,
             tableId: document.getElementById('tableId').value
         };
+        
+        // Save credentials to localStorage
+        localStorage.setItem('dataTransformerCredentials', JSON.stringify(credentials));
 
         try {
             const response = await fetch('/fetch-headers', {
