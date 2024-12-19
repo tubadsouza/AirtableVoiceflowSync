@@ -86,13 +86,13 @@ document.addEventListener('DOMContentLoaded', function() {
                 const searchableFields = [];
                 const metadataFields = [];
                 
-                const fields = fieldsContainer.querySelectorAll('input[type="checkbox"]');
-                fields.forEach(field => {
-                    const fieldName = field.name;
-                    if (field.id.endsWith('-searchable') && field.checked) {
+                const fields = document.querySelectorAll('.field-name');
+                fields.forEach(fieldSpan => {
+                    const fieldName = fieldSpan.textContent.trim();
+                    if (document.getElementById(`${fieldName}-searchable`).checked) {
                         searchableFields.push(fieldName);
                     }
-                    if (field.id.endsWith('-metadata') && field.checked) {
+                    if (document.getElementById(`${fieldName}-metadata`).checked) {
                         metadataFields.push(fieldName);
                     }
                 });
@@ -144,13 +144,13 @@ document.addEventListener('DOMContentLoaded', function() {
         const searchableFields = [];
         const metadataFields = [];
         
-        const fields = fieldsContainer.querySelectorAll('input[type="checkbox"]');
-        fields.forEach(field => {
-            const fieldName = field.name;
-            if (field.id.endsWith('-searchable') && field.checked) {
+        const fields = document.querySelectorAll('.field-name');
+        fields.forEach(fieldSpan => {
+            const fieldName = fieldSpan.textContent.trim();
+            if (document.getElementById(`${fieldName}-searchable`).checked) {
                 searchableFields.push(fieldName);
             }
-            if (field.id.endsWith('-metadata') && field.checked) {
+            if (document.getElementById(`${fieldName}-metadata`).checked) {
                 metadataFields.push(fieldName);
             }
         });
