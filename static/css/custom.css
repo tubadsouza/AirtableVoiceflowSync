@@ -26,3 +26,23 @@ pre#jsonOutput {
 .btn:focus {
     box-shadow: none;
 }
+
+.field-name {
+    font-size: 1.1rem;
+    font-weight: 500;
+    min-width: 120px;
+    color: var(--bs-primary);
+}
+
+.btn-group {
+    flex-grow: 1;
+}
+
+.btn-outline-primary {
+    border-color: var(--bs-border-color);
+}
+
+.btn-check:checked + .btn-outline-primary {
+    background-color: var(--bs-primary);
+    border-color: var(--bs-primary);
+}

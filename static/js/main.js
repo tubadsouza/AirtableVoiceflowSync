@@ -59,23 +59,18 @@ document.addEventListener('DOMContentLoaded', function() {
 
             // Create field selection checkboxes
             fieldsContainer.innerHTML = data.fields.map(field => `
-                <div class="mb-2">
-                    <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="${field}" 
-                               id="${field}_searchable" value="searchable">
-                        <label class="form-check-label" for="${field}_searchable">Searchable</label>
+                <div class="mb-2 d-flex align-items-center">
+                    <span class="field-name flex-shrink-0 me-3">${field}</span>
+                    <div class="btn-group" role="group" aria-label="Field type for ${field}">
+                        <input type="radio" class="btn-check" name="${field}" id="${field}-searchable" value="searchable">
+                        <label class="btn btn-outline-primary" for="${field}-searchable">Searchable</label>
+                        
+                        <input type="radio" class="btn-check" name="${field}" id="${field}-metadata" value="metadata">
+                        <label class="btn btn-outline-primary" for="${field}-metadata">Metadata</label>
+                        
+                        <input type="radio" class="btn-check" name="${field}" id="${field}-none" value="none" checked>
+                        <label class="btn btn-outline-primary" for="${field}-none">None</label>
                     </div>
-                    <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="${field}" 
-                               id="${field}_metadata" value="metadata">
-                        <label class="form-check-label" for="${field}_metadata">Metadata</label>
-                    </div>
-                    <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="${field}" 
-                               id="${field}_none" value="none" checked>
-                        <label class="form-check-label" for="${field}_none">None</label>
-                    </div>
-                    <span class="ms-2">${field}</span>
                 </div>
             `).join('');
 
@@ -202,11 +197,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     function updatePreview() {
-        // Implement preview update logic here.  This is a placeholder.
-        //  You'll need to fetch data based on the selected radio buttons
-        // and update the content of the previewPane.  For example:
-        const previewData = {}; // Construct preview data
+        const previewData = {}; 
         previewPane.textContent = JSON.stringify(previewData, null, 2);
-
     }
 });
