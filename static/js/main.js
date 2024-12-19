@@ -196,8 +196,5 @@ document.addEventListener('DOMContentLoaded', function() {
             });
     });
 
-    function updatePreview() {
-        const previewData = {}; 
-        previewPane.textContent = JSON.stringify(previewData, null, 2);
-    }
+    // Preview functionality is now handled by the updatePreview function above
 });
