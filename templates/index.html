@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Airtable Data Transformer</title>
+    <link href="https://cdn.replit.com/agent/bootstrap-agent-dark-theme.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/custom.css') }}" rel="stylesheet">
+</head>
+<body>
+    <div class="container py-4">
+        <h1 class="mb-4">Airtable Data Transformer</h1>
+        
+        <!-- Credentials Form -->
+        <div class="card mb-4">
+            <div class="card-body">
+                <h5 class="card-title">Airtable Credentials</h5>
+                <form id="credentialsForm">
+                    <div class="mb-3">
+                        <label for="apiKey" class="form-label">API Key</label>
+                        <input type="password" class="form-control" id="apiKey" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="baseId" class="form-label">Base ID</label>
+                        <input type="text" class="form-control" id="baseId" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="tableId" class="form-label">Table ID</label>
+                        <input type="text" class="form-control" id="tableId" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Fetch Fields</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Field Selection -->
+        <div id="fieldSelection" class="card mb-4 d-none">
+            <div class="card-body">
+                <h5 class="card-title">Field Classification</h5>
+                <div id="fieldsContainer" class="mb-3">
+                    <!-- Fields will be dynamically added here -->
+                </div>
+                <button id="transformButton" class="btn btn-primary">Transform Data</button>
+            </div>
+        </div>
+
+        <!-- Results -->
+        <div id="results" class="card mb-4 d-none">
+            <div class="card-body">
+                <h5 class="card-title">Transformed Data</h5>
+                <div class="d-flex justify-content-end mb-2">
+                    <button id="copyButton" class="btn btn-secondary">
+                        <i class="bi bi-clipboard"></i> Copy
+                    </button>
+                </div>
+                <pre id="jsonOutput" class="bg-dark text-light p-3 rounded"></pre>
+            </div>
+        </div>
+
+        <!-- Loading Spinner -->
+        <div id="loadingSpinner" class="text-center d-none">
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+        </div>
+
+        <!-- Error Alert -->
+        <div id="errorAlert" class="alert alert-danger d-none" role="alert"></div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>

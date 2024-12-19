@@ -1,0 +1,28 @@
+pre#jsonOutput {
+    max-height: 500px;
+    overflow-y: auto;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+
+.spinner-border {
+    width: 3rem;
+    height: 3rem;
+}
+
+#loadingSpinner {
+    margin: 2rem 0;
+}
+
+.card {
+    border-radius: 0.5rem;
+}
+
+.form-control:focus {
+    box-shadow: none;
+    border-color: var(--bs-primary);
+}
+
+.btn:focus {
+    box-shadow: none;
+}
