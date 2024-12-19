@@ -175,16 +175,32 @@ document.addEventListener('DOMContentLoaded', function() {
             // Display the transformed data
             jsonOutput.textContent = JSON.stringify(data, null, 2);
             results.classList.remove('d-none');
+            
+        } catch (error) {
+            showError(error.message);
+        } finally {
+            hideLoading();
+        }
+    });
 
-            // Upload to Voiceflow
+    // Handle upload to Voiceflow
+    const uploadToVoiceflowButton = document.getElementById('uploadToVoiceflowButton');
+    uploadToVoiceflowButton.addEventListener('click', async function() {
+        hideError();
+        showLoading();
+
+        try {
+            const transformedData = JSON.parse(jsonOutput.textContent);
+            const voiceflowApiKey = document.getElementById('voiceflowApiKey').value;
+
             const voiceflowResponse = await fetch('/upload-to-voiceflow', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    voiceflowApiKey: requestData.voiceflowApiKey,
-                    data: data
+                    voiceflowApiKey: voiceflowApiKey,
+                    data: transformedData
                 })
             });
 
@@ -192,6 +208,17 @@ document.addEventListener('DOMContentLoaded', function() {
                 const voiceflowError = await voiceflowResponse.json();
                 throw new Error(voiceflowError.error || 'Failed to upload to Voiceflow');
             }
+
+            // Show success message
+            const successAlert = document.createElement('div');
+            successAlert.className = 'alert alert-success mt-3';
+            successAlert.textContent = 'Successfully uploaded to Voiceflow!';
+            results.appendChild(successAlert);
+
+            // Remove success message after 3 seconds
+            setTimeout(() => {
+                successAlert.remove();
+            }, 3000);
 
         } catch (error) {
             showError(error.message);
