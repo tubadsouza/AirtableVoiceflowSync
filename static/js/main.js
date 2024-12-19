@@ -72,14 +72,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 <div class="mb-2 d-flex align-items-center">
                     <span class="field-name flex-shrink-0 me-3">${field}</span>
                     <div class="btn-group" role="group" aria-label="Field type for ${field}">
-                        <input type="radio" class="btn-check" name="${field}" id="${field}-searchable" value="searchable">
+                        <input type="checkbox" class="btn-check" id="${field}-searchable">
                         <label class="btn btn-outline-primary" for="${field}-searchable">Searchable</label>
                         
-                        <input type="radio" class="btn-check" name="${field}" id="${field}-metadata" value="metadata">
+                        <input type="checkbox" class="btn-check" id="${field}-metadata">
                         <label class="btn btn-outline-primary" for="${field}-metadata">Metadata</label>
-                        
-                        <input type="radio" class="btn-check" name="${field}" id="${field}-none" value="none" checked>
-                        <label class="btn btn-outline-primary" for="${field}-none">None</label>
                     </div>
                 </div>
             `).join('');
